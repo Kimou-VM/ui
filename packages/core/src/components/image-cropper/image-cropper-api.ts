@@ -713,7 +713,7 @@ const imageCropperApi: (
   ...args: Parameters<typeof imageCropperApiBody>
 ) => ImageCropperApi = imageCropperApiBody
 
-// A handle's events reach the selection around it too.
+// A handle still written inside the selection sends its events to it too.
 const isHandle = (event: Event) =>
   !!(event.target as Element | null)?.closest?.(
     '[data-slot="image-cropper-handle"]'

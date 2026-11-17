@@ -49,12 +49,12 @@ const aspectRatio = ref<number>()
         <ImageCropperImage alt="Mountains at sunset" />
         <ImageCropperSelection>
           <ImageCropperGrid />
-          <ImageCropperHandle
-            v-for="position in handles"
-            :key="position"
-            :position="position"
-          />
         </ImageCropperSelection>
+        <ImageCropperHandle
+          v-for="position in handles"
+          :key="position"
+          :position="position"
+        />
       </ImageCropperViewport>
       <div data-slot="row">
         <ImageCropperFlip>Flip</ImageCropperFlip>

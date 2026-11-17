@@ -25,9 +25,9 @@ Use the following composition to build an `ImageCropper`:
 ImageCropper
 ├── ImageCropperViewport
 │   ├── ImageCropperImage
-│   └── ImageCropperSelection
-│       ├── ImageCropperGrid
-│       └── ImageCropperHandle
+│   ├── ImageCropperSelection
+│   │   └── ImageCropperGrid
+│   └── ImageCropperHandle
 ├── ImageCropperZoom
 ├── ImageCropperRotate
 └── ImageCropperFlip
@@ -38,7 +38,7 @@ ImageCropper
 - **ImageCropperImage** is the image, turned and flipped. Give it `alt`.
 - **ImageCropperSelection** shows the crop over the image. It's a slider you drag or move with the arrow keys.
 - **ImageCropperGrid** draws lines across the selection, in thirds, for you to style.
-- **ImageCropperHandle** resizes the selection from one edge or corner, its `position`, like `"se"` for the bottom right.
+- **ImageCropperHandle** resizes the selection from one edge or corner, its `position`, like `"se"` for the bottom right. It goes beside the selection, not inside it, and sits on its edge or corner.
 - **ImageCropperZoom** is a range input from 1, the largest crop, to `maxZoom`.
 - **ImageCropperRotate** turns the image a quarter clockwise.
 - **ImageCropperFlip** mirrors the image left to right, or top to bottom with `direction="vertical"`.
@@ -63,10 +63,9 @@ function CoverPhoto(props: { src: string }) {
     <ImageCropper aria-label="Cover photo" src={props.src} aspectRatio={3}>
       <ImageCropperViewport>
         <ImageCropperImage alt="Your cover photo" />
-        <ImageCropperSelection>
-          <ImageCropperHandle position="nw" />
-          <ImageCropperHandle position="se" />
-        </ImageCropperSelection>
+        <ImageCropperSelection />
+        <ImageCropperHandle position="nw" />
+        <ImageCropperHandle position="se" />
       </ImageCropperViewport>
     </ImageCropper>
   )
@@ -188,7 +187,7 @@ See [Parts and Composition](../parts-and-composition) for the rendering contract
 
 ## Styling
 
-Parts are unstyled, apart from the positions they need: the viewport is `position: relative` with `overflow: hidden`, and the image and selection get their place as inline styles in pixels. Give the viewport a size, and the handles a size and a place on their edge or corner of the selection.
+Parts are unstyled, apart from the positions they need: the viewport is `position: relative` with `overflow: hidden`, and the image, the selection and each handle get their place as inline styles in pixels. A handle's place is the point on its edge or corner, so give it a size and center it with `translate: -50% -50%`. Give the viewport a size too.
 
 A box viewport fits the whole image, so set its `aspect-ratio` to `--image-cropper-aspect-ratio`. A wide `box-shadow` on the selection dims the image outside it. Show the grid only while `data-dragging` is on it.
 

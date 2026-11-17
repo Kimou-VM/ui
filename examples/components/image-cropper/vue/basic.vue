@@ -89,12 +89,12 @@ onBeforeUnmount(() => result.value && URL.revokeObjectURL(result.value))
         <ImageCropperImage alt="Mountains at sunset" />
         <ImageCropperSelection>
           <ImageCropperGrid />
-          <ImageCropperHandle
-            v-for="position in handles"
-            :key="position"
-            :position="position"
-          />
         </ImageCropperSelection>
+        <ImageCropperHandle
+          v-for="position in handles"
+          :key="position"
+          :position="position"
+        />
       </ImageCropperViewport>
     </ImageCropper>
     <div data-slot="image-cropper-result">

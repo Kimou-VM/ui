@@ -429,31 +429,10 @@
   }
 
   [data-slot="image-cropper-handle"] {
-    position: absolute;
     width: 12px;
     height: 12px;
     margin: -6px;
     background: #fff;
-  }
-
-  [data-slot="image-cropper-handle"][data-position*="n"] {
-    top: 0;
-  }
-
-  [data-slot="image-cropper-handle"][data-position*="s"] {
-    top: 100%;
-  }
-
-  [data-slot="image-cropper-handle"][data-position*="w"] {
-    left: 0;
-  }
-
-  [data-slot="image-cropper-handle"][data-position*="e"] {
-    left: 100%;
-  }
-
-  [data-slot="image-cropper-handle"][data-position="e"] {
-    top: 50%;
   }
 
   .panel,

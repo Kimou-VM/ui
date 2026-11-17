@@ -46,10 +46,10 @@ function Fixture() {
           <ImageCropperImage alt={imageCropperFixture.alt} />
           <ImageCropperSelection>
             <ImageCropperGrid />
-            {imageCropperFixture.handles.map((position) => (
-              <ImageCropperHandle key={position} position={position} />
-            ))}
           </ImageCropperSelection>
+          {imageCropperFixture.handles.map((position) => (
+            <ImageCropperHandle key={position} position={position} />
+          ))}
         </ImageCropperViewport>
         <ImageCropperZoom />
         <ImageCropperRotate>Rotate</ImageCropperRotate>

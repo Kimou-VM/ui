@@ -114,10 +114,10 @@ function Example() {
           <ImageCropperImage alt="Mountains at sunset" />
           <ImageCropperSelection>
             <ImageCropperGrid />
-            <For each={handles}>
-              {(position) => <ImageCropperHandle position={position} />}
-            </For>
           </ImageCropperSelection>
+          <For each={handles}>
+            {(position) => <ImageCropperHandle position={position} />}
+          </For>
         </ImageCropperViewport>
       </ImageCropper>
       <div data-slot="image-cropper-result">

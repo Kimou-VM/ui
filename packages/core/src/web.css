@@ -2609,7 +2609,6 @@
   }
 
   [data-slot="image-cropper-handle"] {
-    position: absolute;
     width: 1.5rem;
     height: 1.5rem;
     translate: -50% -50%;
@@ -2628,30 +2627,6 @@
       &::after {
         outline: 4px solid var(--ui-ring);
       }
-    }
-
-    &[data-position*="n"] {
-      top: 0;
-    }
-
-    &[data-position*="s"] {
-      top: 100%;
-    }
-
-    &[data-position*="w"] {
-      left: 0;
-    }
-
-    &[data-position*="e"] {
-      left: 100%;
-    }
-
-    &:is([data-position="n"], [data-position="s"]) {
-      left: 50%;
-    }
-
-    &:is([data-position="e"], [data-position="w"]) {
-      top: 50%;
     }
   }
 

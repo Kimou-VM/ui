@@ -28,8 +28,8 @@ function mount(root: HTMLElement) {
           <ui-image-cropper-image><img alt="Mountains at sunset" /></ui-image-cropper-image>
           <ui-image-cropper-selection>
             <ui-image-cropper-grid></ui-image-cropper-grid>
-            ${handles.map((position) => `<ui-image-cropper-handle position="${position}"></ui-image-cropper-handle>`).join("")}
           </ui-image-cropper-selection>
+          ${handles.map((position) => `<ui-image-cropper-handle position="${position}"></ui-image-cropper-handle>`).join("")}
         </ui-image-cropper-viewport>
         <div data-slot="row">
           <ui-image-cropper-flip>Flip</ui-image-cropper-flip>

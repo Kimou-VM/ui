@@ -12,8 +12,8 @@ const markup = () => `
         <ui-image-cropper-image><img alt="${imageCropperFixture.alt}" /></ui-image-cropper-image>
         <ui-image-cropper-selection>
           <ui-image-cropper-grid></ui-image-cropper-grid>
-          ${imageCropperFixture.handles.map((position) => `<ui-image-cropper-handle position="${position}"></ui-image-cropper-handle>`).join("")}
         </ui-image-cropper-selection>
+        ${imageCropperFixture.handles.map((position) => `<ui-image-cropper-handle position="${position}"></ui-image-cropper-handle>`).join("")}
       </ui-image-cropper-viewport>
       <ui-image-cropper-zoom></ui-image-cropper-zoom>
       <ui-image-cropper-rotate>Rotate</ui-image-cropper-rotate>

@@ -83,7 +83,6 @@
   }
 
   [data-slot="image-cropper-handle"] {
-    position: absolute;
     width: 10px;
     height: 10px;
     border-radius: 2px;
@@ -95,30 +94,6 @@
       content: "";
       position: absolute;
       inset: -12px;
-    }
-
-    &[data-position*="n"] {
-      top: 0;
-    }
-
-    &[data-position*="s"] {
-      top: 100%;
-    }
-
-    &[data-position*="w"] {
-      left: 0;
-    }
-
-    &[data-position*="e"] {
-      left: 100%;
-    }
-
-    &:is([data-position="n"], [data-position="s"]) {
-      left: 50%;
-    }
-
-    &:is([data-position="e"], [data-position="w"]) {
-      top: 50%;
     }
 
     &:focus-visible {

@@ -47,10 +47,10 @@
       <ImageCropperImage alt="Mountains at sunset" />
       <ImageCropperSelection>
         <ImageCropperGrid />
-        {#each handles as position (position)}
-          <ImageCropperHandle {position} />
-        {/each}
       </ImageCropperSelection>
+      {#each handles as position (position)}
+        <ImageCropperHandle {position} />
+      {/each}
     </ImageCropperViewport>
     <div data-slot="row">
       <ImageCropperFlip>Flip</ImageCropperFlip>

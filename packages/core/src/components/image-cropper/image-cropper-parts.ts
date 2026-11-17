@@ -70,6 +70,18 @@ const handleNames: Record<ImageCropperHandlePosition, string> = {
   sw: "Bottom left corner",
 }
 
+// Where on the selection's box each handle sits, as fractions of its size.
+const handleSpots: Record<ImageCropperHandlePosition, [number, number]> = {
+  n: [0.5, 0],
+  e: [1, 0.5],
+  s: [0.5, 1],
+  w: [0, 0.5],
+  ne: [1, 0],
+  nw: [0, 0],
+  se: [1, 1],
+  sw: [0, 1],
+}
+
 // The selection's place, which also sets the image's, so a drag lays out nothing but these.
 const selectionLive = live<State, ImageCropperApi, {}>((state) => {
   const at = layout(state)
@@ -249,7 +261,8 @@ function imageCropperSlots(slot: SlotFactory<State, ImageCropperApi>) {
       })),
     }),
 
-    // An edge or corner of a box's selection. Arrows move its edges.
+    // An edge or corner of a box's selection, beside it in the viewport,
+    // since a slider's children are hidden from assistive technology. Arrows move its edges.
     handle: slot<ImageCropperHandleProps, ImageCropperHandleState>({
       role: "slider",
       focus: "tab-stop",
@@ -275,6 +288,7 @@ function imageCropperSlots(slot: SlotFactory<State, ImageCropperApi>) {
         "data-position": props.position,
         ...dataAttrs(state),
         style: css({
+          position: "absolute",
           cursor: isInert(state) ? undefined : resizeCursors[props.position],
           "touch-action": "none",
         }),
@@ -285,6 +299,8 @@ function imageCropperSlots(slot: SlotFactory<State, ImageCropperApi>) {
         if (!crop || !natural) {
           return { "aria-valuenow": "0", "data-dragging": dragging }
         }
+        const at = layout(state)
+        const [across, down] = handleSpots[props.position] ?? [0, 0]
         const shown = shownSize(natural, crop.rotation)
         const least = smallest(shown, {
           aspect: state.aspectRatio,
@@ -294,6 +310,12 @@ function imageCropperSlots(slot: SlotFactory<State, ImageCropperApi>) {
         })
         const vertical = props.position === "n" || props.position === "s"
         return {
+          style: at
+            ? css({
+                left: px(at.selection.left + across * at.selection.width),
+                top: px(at.selection.top + down * at.selection.height),
+              })
+            : undefined,
           "aria-valuenow": String(vertical ? crop.height : crop.width),
           "aria-valuemin": String(
             Math.ceil(vertical ? least.height : least.width)

@@ -57,10 +57,10 @@
       <ImageCropperImage alt={imageCropperFixture.alt} />
       <ImageCropperSelection>
         <ImageCropperGrid />
-        {#each imageCropperFixture.handles as position (position)}
-          <ImageCropperHandle {position} />
-        {/each}
       </ImageCropperSelection>
+      {#each imageCropperFixture.handles as position (position)}
+        <ImageCropperHandle {position} />
+      {/each}
     </ImageCropperViewport>
     <ImageCropperZoom />
     <ImageCropperRotate>Rotate</ImageCropperRotate>

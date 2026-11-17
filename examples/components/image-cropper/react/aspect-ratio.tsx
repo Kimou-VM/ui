@@ -50,10 +50,10 @@ function Example() {
           <ImageCropperImage alt="Mountains at sunset" />
           <ImageCropperSelection>
             <ImageCropperGrid />
-            {handles.map((position) => (
-              <ImageCropperHandle key={position} position={position} />
-            ))}
           </ImageCropperSelection>
+          {handles.map((position) => (
+            <ImageCropperHandle key={position} position={position} />
+          ))}
         </ImageCropperViewport>
         <div data-slot="row">
           <ImageCropperFlip>Flip</ImageCropperFlip>

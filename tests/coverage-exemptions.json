@@ -54,7 +54,6 @@
     "unit": "todo"
   },
   "image-cropper": {
-    "a11y": "todo",
     "rtl": "todo",
     "leak": "todo"
   },

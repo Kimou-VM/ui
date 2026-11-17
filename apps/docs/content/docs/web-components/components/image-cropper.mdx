@@ -31,9 +31,9 @@ Use the following composition to build a `ui-image-cropper`:
 ui-image-cropper
 ├── ui-image-cropper-viewport
 │   ├── ui-image-cropper-image
-│   └── ui-image-cropper-selection
-│       ├── ui-image-cropper-grid
-│       └── ui-image-cropper-handle
+│   ├── ui-image-cropper-selection
+│   │   └── ui-image-cropper-grid
+│   └── ui-image-cropper-handle
 ├── ui-image-cropper-zoom
 ├── ui-image-cropper-rotate
 └── ui-image-cropper-flip
@@ -44,7 +44,7 @@ ui-image-cropper
 - **ui-image-cropper-image** wraps your `<img>`, with its `alt`, and turns and flips it.
 - **ui-image-cropper-selection** shows the crop over the image. It's a slider you drag or move with the arrow keys.
 - **ui-image-cropper-grid** draws lines across the selection, in thirds, for you to style.
-- **ui-image-cropper-handle** resizes the selection from one edge or corner, its `position`, like `"se"` for the bottom right.
+- **ui-image-cropper-handle** resizes the selection from one edge or corner, its `position`, like `"se"` for the bottom right. It goes beside the selection, not inside it, and sits on its edge or corner.
 - **ui-image-cropper-zoom** wraps a range input from 1, the largest crop, to `max-zoom`.
 - **ui-image-cropper-rotate** turns the image a quarter clockwise.
 - **ui-image-cropper-flip** mirrors the image left to right, or top to bottom with `direction="vertical"`.
@@ -65,10 +65,9 @@ Import the parts and put them together:
     <ui-image-cropper-image>
       <img alt="Your cover photo" />
     </ui-image-cropper-image>
-    <ui-image-cropper-selection>
-      <ui-image-cropper-handle position="nw"></ui-image-cropper-handle>
-      <ui-image-cropper-handle position="se"></ui-image-cropper-handle>
-    </ui-image-cropper-selection>
+    <ui-image-cropper-selection></ui-image-cropper-selection>
+    <ui-image-cropper-handle position="nw"></ui-image-cropper-handle>
+    <ui-image-cropper-handle position="se"></ui-image-cropper-handle>
   </ui-image-cropper-viewport>
 </ui-image-cropper>
 ```
@@ -138,7 +137,7 @@ See [State and Events](../state-and-events) for controlled state, cancellation a
 
 ## Styling
 
-Parts are unstyled, apart from the positions they need: the viewport is `position: relative` with `overflow: hidden`, and the image and selection get their place as inline styles in pixels. Give the viewport a size, and the handles a size and a place on their edge or corner of the selection.
+Parts are unstyled, apart from the positions they need: the viewport is `position: relative` with `overflow: hidden`, and the image, the selection and each handle get their place as inline styles in pixels. A handle's place is the point on its edge or corner, so give it a size and center it with `translate: -50% -50%`. Give the viewport a size too.
 
 A box viewport fits the whole image, so set its `aspect-ratio` to `--image-cropper-aspect-ratio`. A wide `box-shadow` on the selection dims the image outside it. Show the grid only while `data-dragging` is on it.
 

@@ -59,12 +59,12 @@ function onCropCommit(
         <ImageCropperImage :alt="imageCropperFixture.alt" />
         <ImageCropperSelection>
           <ImageCropperGrid />
-          <ImageCropperHandle
-            v-for="position in imageCropperFixture.handles"
-            :key="position"
-            :position="position"
-          />
         </ImageCropperSelection>
+        <ImageCropperHandle
+          v-for="position in imageCropperFixture.handles"
+          :key="position"
+          :position="position"
+        />
       </ImageCropperViewport>
       <ImageCropperZoom />
       <ImageCropperRotate>Rotate</ImageCropperRotate>

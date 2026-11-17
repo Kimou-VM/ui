@@ -89,6 +89,30 @@ test.describe("box", () => {
     )
   })
 
+  test("each handle sits on its edge or corner of the selection, and follows it", async ({
+    page,
+    open,
+  }) => {
+    await open("image-cropper", { default: "100,50,100,100" })
+    const spots = async () => {
+      const box = (await selection(page).boundingBox())!
+      const corner = await centerOf(handle(page, "Bottom right corner"))
+      const edge = await centerOf(handle(page, "Right edge"))
+      return [
+        Math.round(corner.x - (box.x + box.width)),
+        Math.round(corner.y - (box.y + box.height)),
+        Math.round(edge.x - (box.x + box.width)),
+        Math.round(edge.y - (box.y + box.height / 2)),
+      ]
+    }
+    expect(await spots()).toEqual([0, 0, 0, 0])
+    await selection(page).focus()
+    await page.keyboard.press("ArrowRight")
+    await handle(page, "Right edge").focus()
+    await page.keyboard.press("ArrowRight")
+    expect(await spots()).toEqual([0, 0, 0, 0])
+  })
+
   test("at a ratio, a handle keeps it", async ({ page, open }) => {
     await open("image-cropper", { aspect: "1", default: "100,50,100,100" })
     await drag(page, await centerOf(handle(page, "Right edge")), {

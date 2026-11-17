@@ -46,10 +46,10 @@ function Fixture() {
           <ImageCropperImage alt={imageCropperFixture.alt} />
           <ImageCropperSelection>
             <ImageCropperGrid />
-            <For each={imageCropperFixture.handles}>
-              {(position) => <ImageCropperHandle position={position} />}
-            </For>
           </ImageCropperSelection>
+          <For each={imageCropperFixture.handles}>
+            {(position) => <ImageCropperHandle position={position} />}
+          </For>
         </ImageCropperViewport>
         <ImageCropperZoom />
         <ImageCropperRotate>Rotate</ImageCropperRotate>
