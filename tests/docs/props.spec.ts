@@ -46,6 +46,8 @@ const components: Record<string, Component> = {
     allowed: {
       // A popup's own shortcut needs the popup open. The Shortcuts page shows it in code.
       layer: "ShortcutOptions",
+      // Holding a key down doesn't show in a preview. The Shortcuts page describes it.
+      repeat: "ShortcutOptions",
     },
   },
   toast: {
