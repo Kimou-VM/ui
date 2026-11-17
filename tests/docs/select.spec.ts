@@ -49,6 +49,7 @@ const fixtureNames = [
   "positioning",
   "rtl",
   "searchable",
+  "virtual-focus",
 ]
 
 // The last line an example logged to its console.

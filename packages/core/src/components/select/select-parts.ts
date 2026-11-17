@@ -58,7 +58,7 @@ import type {
   SelectValueProps,
   SelectValueState,
 } from "./select"
-import type { SelectApi, SelectState } from "./select-api"
+import { virtual, type SelectApi, type SelectState } from "./select-api"
 import { formatLabels, listOf } from "../../foundation/lists/listbox-value"
 import { bindPageLocale, localeOf } from "../../foundation/text/locale"
 import { selects } from "../../foundation/kernel/selects"
@@ -163,6 +163,7 @@ const unreadByItems = {
   query: [],
   searchable: [],
   focusInList: [],
+  virtualFocus: [],
   status: [],
   mounts: [],
   settled: [],
@@ -193,7 +194,11 @@ const selectSlots = (slot: SlotFactory<SelectState, SelectApi>) => ({
   trigger: slot<TriggerProps, SelectTriggerState>({
     role: "combobox",
     focus: "native",
-    keys: ["ArrowDown", "ArrowUp", "Home", "End", "Enter", " ", "typeahead"],
+    // With `virtualFocus`, the open list's keys too, since focus stays here.
+    keys: (state) =>
+      state.virtualFocus
+        ? [...listStepKeys, "Home", "End", "Enter", " ", "Tab", "typeahead"]
+        : ["ArrowDown", "ArrowUp", "Home", "End", "Enter", " ", "typeahead"],
     props: {
       disabled: "boolean",
       // Internal: passed by renderers. Select has no `field` slot, so no element attribute either.
@@ -226,6 +231,12 @@ const selectSlots = (slot: SlotFactory<SelectState, SelectApi>) => ({
     },
     // Settling that there's no label drops the reference without rendering the trigger again.
     direct: direct(["aria-labelledby"]),
+    live: live((state, { api }) => ({
+      "aria-activedescendant":
+        state.virtualFocus && !state.searchable
+          ? api.internal.activeDescendant(state)
+          : undefined,
+    })),
     on: {
       keydown: (event, { api, el }) => api.internal.onTriggerKeyDown(event, el),
       pointerdown(event, { api, el, props, store }) {
@@ -449,7 +460,7 @@ const selectSlots = (slot: SlotFactory<SelectState, SelectApi>) => ({
 
   item: slot<ItemProps, SelectItemState>({
     role: "option",
-    focus: (state) => (searching(state) ? "active-descendant" : "roving"),
+    focus: (state) => (virtual(state) ? "active-descendant" : "roving"),
     props: {
       label: "string",
       disabled: "boolean",
@@ -484,11 +495,11 @@ const selectSlots = (slot: SlotFactory<SelectState, SelectApi>) => ({
     })),
     on: {
       pointermove: (event, { api, key }) => api.internal.hover(key, event),
-      // Presses keep focus in the search field, so typing goes on.
+      // Presses keep focus in the search field or on the trigger.
       pointerdown: (event, context) =>
-        searching(context.store.get()) && holdFocus(event, context),
+        virtual(context.store.get()) && holdFocus(event, context),
       mousedown: (event, context) =>
-        searching(context.store.get()) && holdFocus(event, context),
+        virtual(context.store.get()) && holdFocus(event, context),
     },
     press: ({ api, key }, event) => api.internal.choose(key, event),
     bind(el, context) {
