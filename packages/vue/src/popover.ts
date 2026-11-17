@@ -216,6 +216,7 @@ const PopoverContent = withPayload(
         ] as PropType<PopoverInitialFocus>,
         finalFocus: [String, Object, Function] as PropType<PopoverFinalFocus>,
         keepMounted: optionalBoolean,
+        inline: optionalBoolean,
         // Renders the popup into this element instead of in place.
         container: containerProp,
       },
@@ -234,7 +235,8 @@ const PopoverContent = withPayload(
           if (!element) {
             return null
           }
-          return renderPopup(sheetViewport(popover, element), target())
+          const shown = sheetViewport(popover, element)
+          return props.inline ? shown : renderPopup(shown, target())
         }
       },
     })

@@ -210,6 +210,15 @@ Popovers render in place by default and use the browser's top layer. `container`
 </Popover>
 ```
 
+## In Place
+
+A popover opens above the page. Set `inline` on the content to render it where it is, inside its parent's layout and stacking, like a panel that opens out of a corner widget. Your CSS places it, so `side`, `align` and the offsets don't apply.
+
+<ComponentExample
+  name="popover/inline"
+  caption="Open Feedback. The panel opens above the button, inside the corner box."
+/>
+
 ## Custom Rendering
 
 Every part takes a `render` snippet, which receives the props to spread and the part's state, and the `children` snippet receives the state too. The content's `children` snippet can read its payload, as the row editor does.

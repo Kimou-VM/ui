@@ -96,6 +96,7 @@ function popoverContentOptions() {
     ...(side && { side }),
     ...(align && { align }),
     ...(focus && { initialFocus: focus as "content" | "none" }),
+    ...(params.has("inline") && { inline: true }),
   }
 }
 

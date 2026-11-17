@@ -170,6 +170,7 @@ function PopoverContent<Payload = unknown>(
     initialFocus: props.initialFocus,
     finalFocus: props.finalFocus,
     keepMounted: props.keepMounted,
+    inline: props.inline,
   })
   const rest = omit(
     props,
@@ -183,6 +184,7 @@ function PopoverContent<Payload = unknown>(
     "initialFocus",
     "finalFocus",
     "keepMounted",
+    "inline",
     "container"
   )
   return popupPart(
@@ -191,7 +193,8 @@ function PopoverContent<Payload = unknown>(
     content,
     rest,
     target,
-    sheetViewport
+    sheetViewport,
+    () => props.inline
   )
 }
 

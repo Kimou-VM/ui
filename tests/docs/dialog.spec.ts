@@ -39,6 +39,7 @@ const pages: Record<
       shortcut: /^New Contact/,
       animation: /^(Slide|Fade) In$/,
       modal: /^Open Notes$/,
+      inline: /^Delete Draft$/,
       "dirty-form": /^Write a Post$/,
       nested: /^Account$/,
       "from-menu": async (preview, page) => {

@@ -177,20 +177,24 @@ function bindPopupContent(
   } = internal
   const { placement } = preset
   preset.resetStyles?.bind(el)
+  // Dialog and Popover content take it.
+  const inline = !!(contentProps(key) as { inline?: boolean }).inline
   return (presentation ?? popup).bind(el, {
+    inline,
     // What it's placed against: a controller's anchor, the content's, or the trigger.
     anchor: () =>
       control.anchor() ??
       placement?.anchor(el, contentProps().anchor, triggerElement),
     // Props are read on every check, so a new side applies while open.
     position:
-      placement &&
-      (() =>
-        placement.options(
-          contentProps(key),
-          { side: preset.side, align: "center" },
-          element("arrow")
-        )),
+      placement && !inline
+        ? () =>
+            placement.options(
+              contentProps(key),
+              { side: preset.side, align: "center" },
+              element("arrow")
+            )
+        : undefined,
     rendered: part && ((listener) => onProps(part, listener)),
     // Where focus goes once the popup and its children have bound. Hover content takes none.
     initialFocus:

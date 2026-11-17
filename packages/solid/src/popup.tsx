@@ -21,9 +21,12 @@ function usePopupContainer(own: () => PopupContainer) {
 // top layer support, it goes to the body. Popups inside inherit the container.
 function renderPopup(
   element: () => JSX.Element,
-  container: () => PopupContainer
+  container: () => PopupContainer,
+  inline?: () => boolean | undefined
 ) {
-  const target = createMemo(() => portalTarget(container()))
+  const target = createMemo(() =>
+    inline?.() ? null : portalTarget(container())
+  )
   const content = () => (
     <InheritedContainer value={container}>{element()}</InheritedContainer>
   )
@@ -45,14 +48,16 @@ function popupPart<P extends Primitive, S extends SlotName<P>>(
   part: () => PropsOf<P, S>,
   props: Record<string, any>,
   container: () => PopupContainer,
-  viewport?: typeof sheetViewport
+  viewport?: typeof sheetViewport,
+  inline?: () => boolean | undefined
 ) {
   const element = () => usePart(popup, slot, part, props, "div")
   return (
     <Show when={popup.present(slot, part)}>
       {renderPopup(
         viewport ? () => viewport(popup, element) : element,
-        container
+        container,
+        inline
       )}
     </Show>
   )

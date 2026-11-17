@@ -420,8 +420,8 @@ type AttachConfig = {
   // The element that goes into the top layer, when it isn't the popup itself:
   // a full-screen element the popup sits in, like a sheet's viewport.
   host?: () => HTMLElement | undefined
-  // Stays where it renders instead of going into the top layer, like a
-  // submenu shown in place of its parent's items inside a sheet.
+  // Stays where it renders instead of going into the top layer, with its
+  // backdrop, like a submenu shown in place of its parent's items inside a sheet.
   inline?: boolean
   // Runs when the popup shows, with its layer, and returns a cleanup for when
   // it hides. A sheet rises here.
@@ -1023,7 +1023,7 @@ function createPopupLayer<
     // The backdrop goes into the top layer first, so it sits just below the popup.
     const backdrop = shown?.backdrop
     if (backdrop) {
-      const stop = showBackdrop(backdrop)
+      const stop = showBackdrop(backdrop, config.inline)
       cleanups.push(() => {
         stop()
         hideBackdrop(backdrop)
@@ -1048,7 +1048,7 @@ function createPopupLayer<
         cleanups.push(config.rendered(placement.follow))
       }
     }
-    if (!supportsTopLayer() && !host.style.zIndex) {
+    if (!config.inline && !supportsTopLayer() && !host.style.zIndex) {
       host.style.zIndex = "2147483000"
     }
     cleanups.push(
@@ -1381,8 +1381,11 @@ function createPopupLayer<
     shown.cleanup = attach(el, config)
   }
 
-  function showBackdrop(backdrop: HTMLElement) {
+  function showBackdrop(backdrop: HTMLElement, inline = false) {
     backdrop.removeAttribute("hidden")
+    if (inline) {
+      return animateIn(backdrop)
+    }
     backdrop.setAttribute("popover", "manual")
     try {
       backdrop.showPopover()

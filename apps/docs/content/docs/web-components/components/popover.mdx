@@ -216,6 +216,15 @@ Popovers render in place by default and use the browser's top layer. `container`
 </ui-popover>
 ```
 
+## In Place
+
+A popover opens above the page. Add the `inline` attribute to `ui-popover-content` to render it where it is, inside its parent's layout and stacking, like a panel that opens out of a corner widget. Your CSS places it, so `side`, `align` and the offsets don't apply.
+
+<ComponentExample
+  name="popover/inline"
+  caption="Open Feedback. The panel opens above the button, inside the corner box."
+/>
+
 ## Custom Rendering
 
 Elements have no render functions. The trigger and Close parts wrap your own `<button>` or link, and `as-child` on the title uses your own heading. Read state from the data attributes every part sets: here the trigger's button holds both labels, and the stylesheet shows one or the other while `data-open` is set.

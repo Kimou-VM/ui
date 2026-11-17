@@ -1071,3 +1071,25 @@ test.describe("top layer", () => {
     ).toHaveCount(1)
   })
 })
+
+test("inline content and its backdrop stay where they render", async ({
+  page,
+  open,
+}) => {
+  await open("dialog", { inline: "", modal: "trap-focus" })
+  await trigger(page).click()
+  await expect(dialog(page)).toBeVisible()
+  const backdrop = page.locator(".dialog-backdrop").first()
+  for (const el of [dialog(page), backdrop]) {
+    expect(
+      await el.evaluate((node) => ({
+        topLayer: node.matches(":popover-open"),
+        inFixture: !!node.parentElement?.closest(".fixture"),
+      }))
+    ).toEqual({ topLayer: false, inFixture: true })
+  }
+  await expect(field(page)).toBeFocused()
+  await page.keyboard.press("Escape")
+  await expect(dialog(page)).toBeHidden()
+  await expect(trigger(page)).toBeFocused()
+})

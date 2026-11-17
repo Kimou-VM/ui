@@ -32,6 +32,7 @@ The panel itself, positioned against its trigger, named by its title and describ
     initialFocus,
     finalFocus,
     keepMounted,
+    inline,
     container,
     ...rest
   }: PartProps<"div", PopoverContentState<Payload>> &
@@ -50,7 +51,7 @@ The panel itself, positioned against its trigger, named by its title and describ
     popover,
     "viewport",
     () => ({}),
-    portalTo(target)
+    portalTo(() => (inline ? false : target()))
   )
   const content = useHandlePart(
     popover,
@@ -66,8 +67,9 @@ The panel itself, positioned against its trigger, named by its title and describ
       initialFocus,
       finalFocus,
       keepMounted,
+      inline,
     }),
-    portalTo(() => (viewport.present ? false : target()))
+    portalTo(() => (inline || viewport.present ? false : target()))
   )
 </script>
 

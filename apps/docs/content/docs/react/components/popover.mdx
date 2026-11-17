@@ -214,6 +214,15 @@ const [container, setContainer] = React.useState<HTMLDivElement | null>(null)
 </Popover>
 ```
 
+## In Place
+
+A popover opens above the page. Set `inline` on the content to render it where it is, inside its parent's layout and stacking, like a panel that opens out of a corner widget. Your CSS places it, so `side`, `align` and the offsets don't apply.
+
+<ComponentExample
+  name="popover/inline"
+  caption="Open Feedback. The panel opens above the button, inside the corner box."
+/>
+
 ## Custom Rendering
 
 Every part takes `render`. Pass an element and its props merge with the part's, or a function that receives the props and the part's state. A content render function can read its payload, as the row editor does.

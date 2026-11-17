@@ -1008,3 +1008,22 @@ test.describe("top layer", () => {
     await expect(trigger(page)).toBeFocused()
   })
 })
+
+test("inline content stays where it renders, and the page places it", async ({
+  page,
+  open,
+}) => {
+  await open("popover", { inline: "" })
+  await trigger(page).click()
+  await expect(dialog(page)).toBeVisible()
+  expect(
+    await dialog(page).evaluate((el) => ({
+      topLayer: el.matches(":popover-open"),
+      inFixture: !!el.parentElement?.closest(".fixture"),
+      left: el.style.left,
+    }))
+  ).toEqual({ topLayer: false, inFixture: true, left: "" })
+  await page.keyboard.press("Escape")
+  await expect(dialog(page)).toBeHidden()
+  await expect(trigger(page)).toBeFocused()
+})

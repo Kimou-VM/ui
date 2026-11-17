@@ -22,6 +22,7 @@ The dialog itself, named by its title and described by its description.
     initialFocus,
     finalFocus,
     keepMounted,
+    inline,
     container,
     ...rest
   }: PartProps<"div", DialogContentState<Payload>> &
@@ -37,13 +38,18 @@ The dialog itself, named by its title and described by its description.
   // what moves into the container and the top layer. An alert dialog never
   // presents as a sheet, so it has no viewport to bind.
   const viewport = dialog.sheet
-    ? useHandlePart(dialog.handle, "viewport", () => ({}), portalTo(target))
+    ? useHandlePart(
+        dialog.handle,
+        "viewport",
+        () => ({}),
+        portalTo(() => (inline ? false : target()))
+      )
     : undefined
   const content = useHandlePart(
     dialog.handle,
     "content",
-    () => ({ initialFocus, finalFocus, keepMounted }),
-    portalTo(() => (viewport?.present ? false : target()))
+    () => ({ initialFocus, finalFocus, keepMounted, inline }),
+    portalTo(() => (inline || viewport?.present ? false : target()))
   )
 </script>
 

@@ -241,6 +241,11 @@ type ContentProps = PositionProps &
      * @defaultValue false
      */
     keepMounted?: boolean
+    /**
+     * Renders the popover where it is in the page instead of above it, inside its parent's layout and stacking, and leaves placing it to your CSS: `side`, `align` and the offsets don't apply.
+     * @defaultValue false
+     */
+    inline?: boolean
   }
 
 type ShortcutProps = {
@@ -426,6 +431,7 @@ const popoverPrimitive = /* @__PURE__ */ definePrimitive({
       // `"pointer"` modal, and presents as a popover or a sheet.
       content: slot<ContentProps, PopoverContentState>({
         ...content,
+        props: { ...content.props, inline: "boolean" },
         state: (state) => ({
           open: state.open,
           modal: state.modal as PopoverContentState["modal"],

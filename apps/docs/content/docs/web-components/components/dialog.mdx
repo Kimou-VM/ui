@@ -201,6 +201,15 @@ Dialogs render where you put them and use the browser's top layer. Set `containe
   caption="Choose a mode, open Notes, and try Tab or clicking the page. Check Close on outside press to compare dismissal."
 />
 
+## Inside a Frame
+
+A dialog opens above the whole page. Add the `inline` attribute to `ui-dialog-content` to keep it and its backdrop where they are in the page, like inside an app preview. Your CSS sizes and places them in their frame. Pair it with `modal="trap-focus"` so the page around the frame stays usable.
+
+<ComponentExample
+  name="dialog/inline"
+  caption="Open Delete Draft. The dialog and its dim cover only the frame, and Tab stays inside the dialog."
+/>
+
 ## Warn Before Closing a Dirty Form
 
 Set `dismissible` to `"false"` while there are unsaved changes. Escape, an outside press, or a back gesture then keeps the dialog open and fires `dismissattempt`. Explicit Close parts and controller calls still work, so you can offer a deliberate way out.

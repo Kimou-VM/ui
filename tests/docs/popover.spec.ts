@@ -82,6 +82,15 @@ const examples: Record<string, Example> = {
       await expect(popover).toHaveAttribute("data-presentation", "sheet")
     },
   },
+  inline: {
+    trigger: /^Feedback$/,
+    check: async ({ popover, preview }) => {
+      await expect(
+        preview.locator('[data-slot="popover-corner"]')
+      ).toContainText("Send feedback")
+      await expect(popover).not.toHaveAttribute("popover")
+    },
+  },
   "custom-rendering": {
     trigger: /^Show Updates/,
     check: async ({ preview }) => {

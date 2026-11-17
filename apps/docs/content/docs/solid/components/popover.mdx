@@ -214,6 +214,15 @@ const [container, setContainer] = createSignal<HTMLDivElement>()
 </Popover>
 ```
 
+## In Place
+
+A popover opens above the page. Set `inline` on the content to render it where it is, inside its parent's layout and stacking, like a panel that opens out of a corner widget. Your CSS places it, so `side`, `align` and the offsets don't apply.
+
+<ComponentExample
+  name="popover/inline"
+  caption="Open Feedback. The panel opens above the button, inside the corner box."
+/>
+
 ## Custom Rendering
 
 Every part takes `render`, a function that receives the props to spread and the part's state. `class`, `style` and `children` can be functions of the same state. The content's `children` function can read its payload, as the row editor does.
