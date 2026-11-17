@@ -7,6 +7,10 @@ import { type Listbox } from "./listbox"
 // How far PageUp and PageDown move the highlight.
 const PAGE = 10
 
+// Lists whose PageUp and PageDown something else handles, like a scroll picker
+// that pages by what fits in view.
+const pagedElsewhere = new WeakSet<Element>()
+
 // The step a key takes through a list: 1 or -1 for the arrows, and for Ctrl+N
 // and Ctrl+P on Apple platforms, as in their text fields; the first or last
 // item for Cmd with an arrow; a page for PageUp and PageDown. Undefined for any
@@ -82,4 +86,4 @@ function listKeyDown(
   }
 }
 
-export { listKeyDown, listStep }
+export { listKeyDown, listStep, PAGE, pagedElsewhere }

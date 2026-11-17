@@ -4,6 +4,7 @@ import { projectDistance } from "../motion/projection"
 import { createVelocityTracker } from "../motion/velocity"
 import { clamp } from "../number/steps"
 import { isRTL } from "../platform/env"
+import { pagedElsewhere } from "./listbox-keyboard"
 import { activeElement, prefersReducedMotion } from "../platform/platform"
 
 // No scroll for this long, with no finger down, counts as rest where
@@ -538,6 +539,7 @@ function bindScrollPicker(
   }
   paint()
 
+  pagedElsewhere.add(list)
   const offs = [
     on(list, "scroll", onScroll, { passive: true }),
     ...(supportsScrollEnd
@@ -554,6 +556,7 @@ function bindScrollPicker(
   ]
 
   return () => {
+    pagedElsewhere.delete(list)
     offs.forEach((off) => off())
     offDrag.forEach((off) => off())
     resizes?.disconnect()

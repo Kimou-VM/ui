@@ -9,6 +9,7 @@ import { isRTL } from "../../foundation/platform/env"
 import { isTypeaheadKey } from "../../foundation/text/typeahead"
 import { type Listbox } from "../../foundation/lists/listbox"
 import { isDisabled } from "../../foundation/lists/listbox-parts"
+import { PAGE, pagedElsewhere } from "../../foundation/lists/listbox-keyboard"
 import type { ListboxValueChangeReason } from "./listbox-root"
 import type { ListboxStore } from "./listbox-root-api"
 import type { Store } from "../../foundation/kernel/store"
@@ -156,6 +157,11 @@ function createListboxKeyboard({
     const step = stepFor(event.key, state.orientation, isRTL(root))
     if (step !== undefined) {
       return navigate(event, step, current)
+    }
+    const page =
+      event.key === "PageDown" ? PAGE : event.key === "PageUp" ? -PAGE : 0
+    if (page && !pagedElsewhere.has(root)) {
+      return navigate(event, page, current)
     }
     if (event.key === " " && listbox.typing()) {
       // Space continues a search while it still matches.
