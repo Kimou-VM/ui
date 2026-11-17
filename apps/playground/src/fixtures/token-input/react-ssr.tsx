@@ -3,7 +3,9 @@ import { hydrateRoot } from "react-dom/client"
 import { renderToString } from "react-dom/server"
 import { Fixture } from "./react"
 
-// Server renders, then the client hydrates. Every mismatch React reports is recorded.
+// Server renders, then the client hydrates. Every mismatch React reports is
+// recorded. With ?hydrate=manual, the page stays server markup until
+// window.hydrate() runs, so specs can use the fields before hydration.
 function mount(root: HTMLElement) {
   const errors: string[] = []
   ;(window as unknown as { __hydrationErrors: string[] }).__hydrationErrors =
@@ -14,14 +16,21 @@ function mount(root: HTMLElement) {
     </React.StrictMode>
   )
   root.innerHTML = renderToString(app)
-  const error = console.error
-  console.error = (...args: unknown[]) => {
-    errors.push(args.map(String).join(" "))
-    error(...args)
+  const hydrate = () => {
+    const error = console.error
+    console.error = (...args: unknown[]) => {
+      errors.push(args.map(String).join(" "))
+      error(...args)
+    }
+    hydrateRoot(root, app, {
+      onRecoverableError: (cause) => errors.push(String(cause)),
+    })
   }
-  hydrateRoot(root, app, {
-    onRecoverableError: (cause) => errors.push(String(cause)),
-  })
+  if (new URLSearchParams(location.search).get("hydrate") === "manual") {
+    ;(window as unknown as { hydrate: () => void }).hydrate = hydrate
+  } else {
+    hydrate()
+  }
 }
 
 export { mount }

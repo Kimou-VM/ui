@@ -194,7 +194,7 @@ function createTokenView(
   // The value the DOM holds now: text without anchors, and a token per known
   // host. A host the browser removed or emptied is a removed token. Anything
   // else, like a <div> an engine wrapped a line in, becomes its text.
-  function read() {
+  function read(rendered: Token[] = []) {
     const value: TokenInputValue = []
     const walk = (parent: Node, nested: boolean) => {
       parent.childNodes.forEach((node, index) => {
@@ -214,6 +214,10 @@ function createTokenView(
         }
         if (isSentinel(node)) {
           return
+        }
+        if ((node as Element).matches('[data-slot="token-input-host"]')) {
+          const token = rendered.shift()
+          return void (token && value.push(token))
         }
         const name = (node as Element).localName
         if (name === "br") {
@@ -405,9 +409,26 @@ function createTokenView(
     }
   }
 
+  // What was typed into the server's markup before the page's script ran, its
+  // hosts standing for the value's tokens in order. A view bound before, as
+  // under React's StrictMode, left its own hosts.
+  function typedBeforeBind(value: TokenInputValue) {
+    const server = doc.createElement("template")
+    server.innerHTML = renderStaticHtml(value, describe)
+    if (
+      !el.firstChild ||
+      el.querySelector(`[${HOST}]`) ||
+      el.innerHTML === server.innerHTML
+    ) {
+      return
+    }
+    return read(value.filter(isToken))
+  }
+
   return {
     render,
-    read,
+    read: () => read(),
+    typedBeforeBind,
     selection,
     select,
     rectAt,

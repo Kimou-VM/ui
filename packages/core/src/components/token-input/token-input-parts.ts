@@ -119,7 +119,21 @@ const tokenInputSlots = (
         onHosts: () =>
           measured(() => store.set({ hosts: store.get().hosts + 1 })),
       })
+      const typed = view.typedBeforeBind(store.get().value)
       api.internal.setView(view)
+      // After the framework finishes hydrating, which checks the form's text
+      // against the value it rendered.
+      let bound = true
+      if (typed) {
+        queueMicrotask(
+          () =>
+            bound &&
+            api.internal.commit(typed, {
+              reason: "input-change",
+              selection: api.internal.caretAt(valueLength(typed)),
+            })
+        )
+      }
       const unbind = bindTokenEditing(el, view, api)
       // Hosts say when their token is selected, for styling chips without a framework part.
       let selected = ""
@@ -149,6 +163,7 @@ const tokenInputSlots = (
         writeLabels()
       })
       return () => {
+        bound = false
         unsubscribe()
         unbind()
         api.internal.setView(undefined)

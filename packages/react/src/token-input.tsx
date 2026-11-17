@@ -108,13 +108,15 @@ function TokenInputEditor({
 }: Omit<PartProps<"div", TokenInputEditorState>, "children"> &
   TokenInputEditorProps) {
   const input = useHandle(tokenInput)
-  // The first value as markup, so a server render shows it. React never touches it again.
+  // The first value as markup, so a server render shows it. React never touches
+  // it again, and leaves anything typed into it before hydration to the core.
   const [html] = React.useState(() => ({
     __html: renderStaticHtml(input.state.value, input.api.internal.describe),
   }))
   const element = {
     ...props,
     dangerouslySetInnerHTML: html,
+    suppressHydrationWarning: true,
     render: controlRender(useFieldControl(props), "div", render),
   }
   return usePart(input, "editor", { placeholder }, element)

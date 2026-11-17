@@ -21,6 +21,7 @@ import {
 import { Command, CommandInput, CommandItem, CommandList } from "../src/command"
 import { DatePicker, DatePickerInput } from "../src/date-picker"
 import { NumberInput, NumberInputControl } from "../src/number-input"
+import { TokenInput, TokenInputEditor } from "../src/token-input"
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 
@@ -205,4 +206,50 @@ test("a combobox emptied before hydration clears its value, even without focus",
   const input = await typeThenHydrate(app, "")
   expect(input.value).toBe("")
   expect(onValueChange).toHaveBeenCalledWith(null, expect.anything())
+})
+
+test("a token input keeps text typed before hydration, beside its tokens", async () => {
+  const onValueChange = vi.fn()
+  const error = vi.spyOn(console, "error").mockImplementation(() => {})
+  const file = { type: "file", value: "src/a.ts", label: "a.ts" }
+  const app = (
+    <TokenInput defaultValue={["Explain ", file]} onValueChange={onValueChange}>
+      <TokenInputEditor aria-label="Prompt" />
+    </TokenInput>
+  )
+  const container = document.body.appendChild(document.createElement("div"))
+  container.innerHTML = renderToString(app)
+  const editor = container.querySelector<HTMLElement>('[role="textbox"]')!
+  editor.append(" please")
+  await React.act(async () => {
+    root = hydrateRoot(container, app)
+  })
+  expect(onValueChange).toHaveBeenCalledWith(
+    ["Explain ", expect.objectContaining(file), " please"],
+    expect.anything()
+  )
+  expect(editor.textContent).toContain(" please")
+  expect(error).not.toHaveBeenCalled()
+  error.mockRestore()
+})
+
+test("a token input left as the server rendered it changes nothing as it hydrates", async () => {
+  const onValueChange = vi.fn()
+  const app = (
+    <TokenInput
+      defaultValue={[
+        "Explain ",
+        { type: "file", value: "src/a.ts", label: "a.ts" },
+      ]}
+      onValueChange={onValueChange}
+    >
+      <TokenInputEditor aria-label="Prompt" />
+    </TokenInput>
+  )
+  const container = document.body.appendChild(document.createElement("div"))
+  container.innerHTML = renderToString(app)
+  await React.act(async () => {
+    root = hydrateRoot(container, app)
+  })
+  expect(onValueChange).not.toHaveBeenCalled()
 })
