@@ -38,11 +38,7 @@ const options = letters
   .join("")
 
 test("a listbox's page keys move a page, and stop at the ends", async () => {
-  const view = mount(
-    listbox,
-    { "aria-label": "Letter" },
-    `<root>${options}</root>`
-  )
+  const view = mount(listbox, {}, `<root aria-label="Letter">${options}</root>`)
   mounts.push(view)
   ;(view.root.querySelector('[role="option"]') as HTMLElement).focus()
   await view.keys("PageDown")
@@ -54,11 +50,7 @@ test("a listbox's page keys move a page, and stop at the ends", async () => {
 })
 
 test("a listbox leaves its page keys to a scroll picker", async () => {
-  const view = mount(
-    listbox,
-    { "aria-label": "Letter" },
-    `<root>${options}</root>`
-  )
+  const view = mount(listbox, {}, `<root aria-label="Letter">${options}</root>`)
   mounts.push(view)
   const unbind = bindScrollPicker(view.root)
   const handled: boolean[] = []
