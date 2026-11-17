@@ -62,7 +62,8 @@ const continues = (animation: CSSTransition, moving: CSSTransition) =>
 
 function seconds(value: string) {
   return value.split(",").map((part) => {
-    const number = parseFloat(part)
+    // An element outside the page reports no duration at all.
+    const number = parseFloat(part) || 0
     return part.trim().endsWith("ms") ? number / 1000 : number
   })
 }

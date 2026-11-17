@@ -136,8 +136,10 @@ function createAsyncOptions<Item>(
           return
         }
         controller = undefined
-        const items = Array.isArray(result) ? result : result.items
-        const hasMore = !Array.isArray(result) && !!result.hasMore
+        // The type rules it out, but a loader that resolves to nothing
+        // shouldn't leave the list loading.
+        const items = Array.isArray(result) ? result : (result?.items ?? [])
+        const hasMore = !Array.isArray(result) && !!result?.hasMore
         set({
           items: next === 0 ? items : [...state.items, ...items],
           status: "idle",
