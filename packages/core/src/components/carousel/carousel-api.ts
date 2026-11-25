@@ -464,6 +464,41 @@ function carouselApiBody(
     rested()
   }
 
+  // An inert slide peeking in at the edge can't take the click, which lands
+  // on the content or viewport, so the slide under the pointer is found by its box.
+  function pressSlide(event: MouseEvent) {
+    if (
+      event.defaultPrevented ||
+      (event.target !== element("content") &&
+        event.target !== element("viewport"))
+    ) {
+      return
+    }
+    const slides = elements(context, "item")
+    const slide = slides.find(({ el }) => {
+      const box = el.getBoundingClientRect()
+      return (
+        event.clientX >= box.left &&
+        event.clientX < box.right &&
+        event.clientY >= box.top &&
+        event.clientY < box.bottom
+      )
+    })
+    const index = slide
+      ? store.get().pages.findIndex((page) => page.includes(slide.key))
+      : -1
+    if (!slide || index === -1) {
+      return
+    }
+    const box = slide.el.getBoundingClientRect()
+    const view = (element("viewport") ?? slide.el).getBoundingClientRect()
+    const { vertical, rtl } = axis()
+    const ahead = vertical
+      ? box.top + box.bottom > view.top + view.bottom
+      : box.left + box.right > view.left + view.right !== rtl
+    go(index + 1, "item-press", event, ahead ? 1 : -1)
+  }
+
   function bindViewport(viewport: HTMLElement) {
     const cleanups: (() => void)[] = []
     const viewportMotion = createCarouselMotion({
@@ -514,7 +549,8 @@ function carouselApiBody(
       loop.reset(elements(context, "item"))
     })
     cleanups.push(
-      on(viewport, "pointerdown", followDirection, { capture: true })
+      on(viewport, "pointerdown", followDirection, { capture: true }),
+      on(viewport, "click", pressSlide)
     )
     // A finger down pauses rotation; the swipe it makes stops it.
     cleanups.push(
