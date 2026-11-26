@@ -406,6 +406,31 @@ test.describe("indicator", () => {
     await expect.poll(() => coversTab(page, "Account")).toBe(true)
   })
 
+  test("with followHover, the indicator follows the hovered tab and goes back when the pointer leaves", async ({
+    page,
+    open,
+  }) => {
+    await open("tabs", { "follow-hover": "" })
+    await expect.poll(() => coversTab(page, "Account")).toBe(true)
+    await tabNamed(page, "Notifications").hover()
+    await expect.poll(() => coversTab(page, "Notifications")).toBe(true)
+    await page.mouse.move(0, 0)
+    await expect.poll(() => coversTab(page, "Account")).toBe(true)
+  })
+
+  test("with followHover, the indicator goes back to the selected tab when the hovered one is removed", async ({
+    page,
+    open,
+  }) => {
+    await open("tabs", { "follow-hover": "" })
+    await tabNamed(page, "Notifications").hover()
+    await expect.poll(() => coversTab(page, "Notifications")).toBe(true)
+    await tabNamed(page, "Notifications").evaluate((tab) =>
+      (tab.closest("ui-tabs-tab") ?? tab).remove()
+    )
+    await expect.poll(() => coversTab(page, "Account")).toBe(true)
+  })
+
   test("the indicator's far edges stay exact when the list has a fractional width", async ({
     page,
     open,
