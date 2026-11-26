@@ -308,7 +308,21 @@ function ownParts<Each extends Pick<Bound, "key" | "slot" | "props">>(
   )
 }
 
-function componentLabel(parts: Bound[]) {
+// A closed popup's content stays in the web page, hidden. While any part of
+// the component shows, like its trigger, the hidden ones don't name or describe it.
+function shownParts(parts: Bound[]) {
+  const shown = parts.filter((part) => !part.el.closest("[hidden]"))
+  return shown.length ? shown : parts
+}
+
+// The hidden parts name it only when the shown ones can't, like a dialog
+// opened from a trigger on every row, which its title names.
+function componentLabel(all: Bound[]) {
+  const shown = shownParts(all)
+  return labelOf(shown) ?? (shown === all ? undefined : labelOf(all))
+}
+
+function labelOf(parts: Bound[]) {
   const keyless = (slot: string) =>
     parts.find((part) => part.slot === slot && !part.key)?.el
   // Not when the slot has many keys: an accordion's first trigger names its
@@ -643,5 +657,6 @@ export {
   retire,
   rowOf,
   setterOf,
+  shownParts,
   stateKeys,
 }
