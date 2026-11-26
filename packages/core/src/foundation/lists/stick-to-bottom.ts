@@ -42,8 +42,6 @@ type StickToBottomOptions = {
  * const disconnect = log.connect(scroller)
  * // A "Jump to latest" button while !log.get().following:
  * button.onclick = () => log.scrollToBottom({ behavior: "smooth" })
- * // Before adding older messages above:
- * log.prepend()
  * ```
  * @experimental
  */
@@ -310,13 +308,15 @@ function createStickToBottom(options: StickToBottomOptions = {}) {
       }
     },
     /**
-     * Call right before adding content above, like older messages: the next
-     * growth keeps what's in view where it is instead of pushing it down.
+     * Keeps the distance from the end through the next growth. Rows added
+     * above keep their place without it; call it right before adding content
+     * whose rows it can't track, like one block that grows at its top.
      */
     prepend() {
+      // The height as of the last resize, so a call made just after the content
+      // changed, or while a change is still unmeasured, keeps the same place.
       if (scroller) {
-        anchor =
-          scroller.scrollHeight - scroller.clientHeight - scroller.scrollTop
+        anchor = lastHeight - scroller.clientHeight - scroller.scrollTop
       }
     },
   }
