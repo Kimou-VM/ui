@@ -26,12 +26,13 @@ import {
   rowOf,
   entries,
   install,
+  keepOffPage,
   leftFrom,
   listen,
   offPage,
   ownParts,
   placeOf,
-  remember,
+  refresh,
   retire,
   shownParts,
   stateKeys,
@@ -894,7 +895,7 @@ function createAgent(
       instance: PrimitiveInstance
       parts: Bound[]
     }[] = []
-    // A copy, since `remember` can move an entry to the ref it had.
+    // A copy, since `refresh` can move an entry to the ref it had.
     for (const entry of [...entries.values()]) {
       const instance = entry.instance.deref()
       if (!instance) {
@@ -902,8 +903,9 @@ function createAgent(
         continue
       }
       const parts = bound(instance)
-      if (parts.length) {
-        remember(entry, parts)
+      const closed = refresh(entry, parts)
+      if (entry.secret || entry.offLimits) {
+        offPage.delete(entry.ref)
       }
       // Some show only now and then, like a field while it has errors: its control carries its label.
       // One whose every element is hidden, like a field in a closed dialog, isn't on the page yet.
@@ -915,7 +917,12 @@ function createAgent(
       ) {
         found.push({ entry, instance, parts })
         entry.shown = true
+        entry.seen = instance.get()
         shownInCall.add(entry.ref)
+        offPage.delete(entry.ref)
+      } else if (closed) {
+        // React unmounts a closed popup's content, so its fields leave the page there too.
+        keepOffPage(entry, entry.seen)
       }
     }
     inDocumentOrder(
