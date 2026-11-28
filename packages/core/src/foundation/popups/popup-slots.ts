@@ -4,7 +4,7 @@
 // the api `createPopup` returns, so they take no preset of their own.
 import { dev } from "#dev"
 import { checkName } from "#name-check"
-import { flagWhileBound, settleFlag } from "../kernel/bound-keys"
+import { flagWhileBound, later, settleFlag } from "../kernel/bound-keys"
 import { openAttrs } from "../kernel/attrs"
 import { onProps } from "../kernel/part"
 import type { Part, SlotFactory } from "../kernel/primitive-types"
@@ -339,7 +339,22 @@ function popupContent<State extends PopupState, Api extends PopupApi>(
     },
     bind(el, part) {
       settleFlag(part.store, "titled")
-      return bindPopupContent(el, part.api.internal, part.key, part)
+      const name = () => {
+        const named = el.hasAttribute("aria-label")
+        if (named !== !!part.store.get().named) {
+          later(part.store, (draft) => {
+            draft.named = named
+          })
+        }
+      }
+      name()
+      const observer = new MutationObserver(name)
+      observer.observe(el, { attributeFilter: ["aria-label"] })
+      const unbind = bindPopupContent(el, part.api.internal, part.key, part)
+      return () => {
+        observer.disconnect()
+        unbind?.()
+      }
     },
   })
 }
